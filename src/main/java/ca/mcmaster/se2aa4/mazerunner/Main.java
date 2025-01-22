@@ -31,6 +31,8 @@ public class Main {
 
             String filepath = cmd.getOptionValue("i"); 
 
+            // Maze maze = new Maze(filepath) ------<<<<<< >>>>>>>>>> used to creat the ADS 
+
             logger.info("**** Reading the maze from file " + filepath);  // needs to be removed so that it can find -i ?? 
             BufferedReader reader = new BufferedReader(new FileReader (filepath));
             String line;
@@ -44,6 +46,9 @@ public class Main {
                 }
                 logger.debug(System.lineSeparator());
             }
+
+
+
         } catch(ParseException e) {
             logger.error("Failed to find file path"); 
         } catch(Exception e) {

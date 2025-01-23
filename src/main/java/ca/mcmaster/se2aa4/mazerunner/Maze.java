@@ -29,11 +29,11 @@ public class Maze {
  
             for ((int idx = 0; idx < line.length(); i++)) {
  
-                if (line.chatAt(idx) == "#") {
+                if (line.charAt(idx) == "#") {
  
                     newRow.add(false); 
  
-                }else if (line.chatAt(idx) == ' '){
+                }else if (line.charAt(idx) == ' '){
  
                     newRow.add(true); 
                 }
@@ -61,5 +61,47 @@ public class Maze {
         } 
     }
 
+    public int[] mazeStartPosition() {
+        int[] startPosition = new int[2]; 
+        startPosition[1] = 0; 
+        for ( int row = 0; row < this.maze.getRows(); row++) {
+            List<Boolean> currentRow = maze.get(row); 
+            if (currentRow.get(0)) {
+                startPosition[0] = row; 
+                return startPosition; 
+            }            
+            else{
+                continue; 
+            }
+        }
+
+        logger.info("No entry point on the west side of the maze"); 
+        return 0; 
+    }
+
+    public int[] mazeExitPosition() {
+        int [] exitPosition = new int[2]; 
+
+        exitPosition[1] = this.maze.getCols() - 1; 
+
+        for ( int row = 0; row < this.maze.getRows(); row++) {
+            List<Boolean> currentRow = this.maze.get(row); 
+            if (currentRow.get(this.maze.getCols()-1)){
+                exitPosition[0] = row; 
+                return exitPosition; 
+            }
+            else {
+                continue; 
+            }
+        }
+        logger.info("No exit point on th east side of the maze "); 
+        return 0; 
+    }
+
+    public List<List<Boolean>> getMaze() {
+
+        return this.maze; 
+
+    }
   
 }

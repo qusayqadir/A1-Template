@@ -17,6 +17,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("i", "input",true, "Path to maze.txt file ");
+        options.addOption("p", "input", true, "User potential solution for maze "); 
 
         CommandLineParser parser = new DefaultParser(); 
         CommandLine cmd;  
@@ -27,27 +28,38 @@ public class Main {
 
             if (!cmd.hasOption("i")) {
                 logger.error("No maze file path, use -i to select specific maze"); 
+                return; 
             }
 
-            String filepath = cmd.getOptionValue("i"); 
+            String mazefilepath = cmd.getOptionValue("i"); 
 
-            Maze maze = new Maze(filepath) //------<<<<<< >>>>>>>>>> used to creat the ADS 
+            Maze maze = new Maze(mazefilepath); //------<<<<<< >>>>>>>>>> used to creat the ADS 
+           
+            if (cmd.getOptionValue("p")!= null){
 
-            logger.info("**** Reading the maze from file " + filepath);  // needs to be removed so that it can find -i ?? 
-            BufferedReader reader = new BufferedReader(new FileReader (filepath));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                for (int idx = 0; idx < line.length(); idx++) {
-                    if (line.charAt(idx) == '#') {
-                        logger.debug("Wall: "); 
-                    } else if (line.charAt(idx) == ' ') {
-                        logger.debug("Path: ");
-                    }
+                PathFinder path = new PathFinder(maze); 
+                String userSolution = cmd.getOptionValue("p"); 
+                Boolean validPath = path.validate(userSolution);
+                //user solution will be condensced ? 
+
+                if(validPath) {
+                    System.out.println("This is a correct path solution to this maze"); 
                 }
-                logger.debug(System.lineSeparator());
+                else {
+                    System.out.println("This is an incorrect path solution to this maze"); 
+                }
+                
             }
-
-
+            else {
+                // solve the maze ? 
+                logger.info("Finding valid solution for the maze path"); 
+                PathFinder path = new PathFinder(maze);
+                  // pass in the maze object that can be used to find the path 
+                // String solution = path.findSolution(); 
+                System.out.println("This is the solution to the maze: "); 
+                // will need to implement this solution 
+                
+            }
 
         } catch(ParseException e) {
             logger.error("Failed to find file path"); 

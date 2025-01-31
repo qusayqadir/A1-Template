@@ -55,7 +55,7 @@ public class Main {
                 logger.info("Finding valid solution for the maze path"); 
                 PathFinder path = new PathFinder(maze);
                   // pass in the maze object that can be used to find the path 
-                // String solution = path.findSolution(); 
+                String solution = path.findSolution(); 
                 System.out.println("This is the solution to the maze: "); 
                 // will need to implement this solution 
                 

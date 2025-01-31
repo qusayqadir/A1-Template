@@ -15,9 +15,9 @@ public class PathFinder {
     private static final Logger logger = LogManager.getLogger(PathFinder.class);
 
     private List<List<Boolean>> maze; 
-    private List<String> solutionPath; 
     private String userSolution; 
-    private String solution; 
+    
+    private StringBuilder solution = new StringBuilder(); 
 
     public PathFinder(Maze maze) {
         this.maze = maze.getMaze(); 
@@ -34,9 +34,8 @@ public class PathFinder {
         // user soliution will be condensed, need to expand it, how ? 
     
         this.userSolution = userSolution;
-        if (this.solution == null) {
-            findSolution(); 
-        }
+        this.solution  = this.findSolution(); 
+        
         if (this.userSolution.equals(this.solution)) {
             return true; 
         }

@@ -1,90 +1,182 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File; 
-import org.apache.commons.cli.*; 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PathFinder {
-
     private static final Logger logger = LogManager.getLogger(PathFinder.class);
 
-    private Maze maze; 
-    private Player player; 
-    private String userSolution; 
-    private Tile currTile; 
+    private Maze maze;
+    private Player player;
+    private Player validatePlayer; 
+    private StringBuilder solution;
 
-    
-    private StringBuilder solution = new StringBuilder(); 
-
-
-    public PathFinder(Maze maze) {
-        this.maze = maze.getMaze(); 
-        player = new Player(maze.mazeStartPosition()); 
-        currTile = new Tile(maze.mazeStartPosition(), this.maze);
+    public PathFinder(Maze maze, boolean userInput) {
+        this.maze = maze; 
+        if(!userInput) {
+            this.solution = new StringBuilder(); 
+            this.player = new Player(maze.mazeStartPosition());
+        }
+        this.validatePlayer = new Player(maze.mazeStartPosition()); 
+        if (userInput) {
+            this.player = this.validatePlayer;
+        }
+        
     }
 
-    public String findSolution() { 
-        logger.info("Finding Valid solution");
-        // have a way to parse through the maze and append to solutionPath list. 
-        // need to implement the logic to find the solution
+    public String findSolution() {
+        logger.info("Finding solution using Right-Hand Rule");
 
-        while (!hasReachedEnd()) { 
-            if(this.canMoveForward()){
-                player.moveForward(); 
-                this.solution.append("F"); 
+        // 🔹 Set initial direction to EAST (right)
+        player.setInitialDirection();
+
+        int maxSteps = 1000; // Prevent infinite loops
+        int stepCount = 0;
+
+        while (!hasReachedEnd() && stepCount < maxSteps) {
+            stepCount++;
+
+            // 🔹 Right-Hand Rule: Try turning right first
+            Direction rightDir = player.getDirection().turnRight();
+            if (canMove(rightDir)) {
+                player.playerTurnRight();
+                solution.append("R");
+                player.playerMoveForward();
+                solution.append("F");
             }
+            // 🔹 If right is blocked, move forward if possible
+            else if (canMove(player.getDirection())) {
+                player.playerMoveForward();
+                solution.append("F");
+            }
+            // 🔹 If forward is blocked, try turning left
+            else if (canMove(player.getDirection().turnLeft())) {
+                player.playerTurnLeft();
+                solution.append("L");
+                player.playerMoveForward();
+                solution.append("F");
+            }
+            // 🔹 If all directions are blocked, turn around (180 degrees)
+            else {
+                player.playerTurnRight();
+                solution.append("R");
+                player.playerTurnRight();
+                solution.append("R");
+                player.playerMoveForward();
+                solution.append("F");
+            }
+
+            // 🔥 Debugging Output
+            logger.debug("Current Position:z`" + player.getPosition()[0] + "," + player.getPosition()[1] +
+                         " | Direction: " + player.getDirection() + 
+                         " | Path: " + solution.toString());
         }
 
-        return this.solution;  
+      
+        if (hasReachedEnd()) {
+            logger.info("Maze solved! Path: " + solution.toString());
+        } else {
+            logger.warn("Maze could not be solved within " + maxSteps + " steps.");
+        }
+
+        return solution.toString();
     }
 
-    public boolean validate(String userSolution) {
-        // user soliution will be condensed, need to expand it, how ? 
-    
-        this.userSolution = userSolution;
-        this.solution  = this.findSolution(); 
+    private boolean canMove(Direction dir) {
+        int[] nextPos = player.getNextPosition(dir);
+        return isWithinBounds(nextPos) && maze.validMove(nextPos[0], nextPos[1]);
+    }
 
-        if (this.userSolution.equals(this.solution)) {
-            return true; 
-        }
-        else {
-            return false; 
-        }
+    private boolean isWithinBounds(int[] pos) {
+        return pos[0] >= 0 && pos[0] < maze.getRows() && pos[1] >= 0 && pos[1] < maze.getCols();
     }
 
     public boolean hasReachedEnd() {
-        // check if the player has reached the end of the maze
-        if(player.getPosition() == maze.mazeExitPosition()) {
-            return true; 
+        int[] playerPos = player.getPosition();
+        int[] exitPos = maze.mazeExitPosition();
+        return playerPos[0] == exitPos[0] && playerPos[1] == exitPos[1];
+    }
+    
+    public String factorizedPath(String solutionPath) {
+        StringBuilder factorizedPath = new StringBuilder();
+        int lengthSolution = solutionPath.length();
+        int i = 0; 
+
+        while ( i < lengthSolution) {
+            char currentChar = solutionPath.charAt(i);
+            int count = 1; 
+
+            while (i + 1 < lengthSolution && solutionPath.charAt(i + 1) == currentChar) {
+                i++;
+                count++;
+            }
+
+            factorizedPath.append(count); 
+            factorizedPath.append(currentChar);
+            factorizedPath.append(" "); 
+            i++;    
         }
-        return false; 
+
+        return factorizedPath.toString();
     }
 
-    /*
-    only need to check if it can move forward, if it can't 
-    then rotate, 
-    and then check again can it move forward 
-    */ 
+    public boolean validate(String userSolution) {
+        validatePlayer.setInitialDirection();
+        int lengthSolution = userSolution.length();
+        int i = 0; 
 
+        while (i < lengthSolution) {
+            char currentChar  = userSolution.charAt(i); 
+            int count = 0; 
+            int j = 0; 
+            if (Character.isDigit(currentChar)) {
 
-    public boolean canMoveForward(){
-        // checks if the next step is a wall need to know the diretion is facing 
-        if(tile.isWall(player.getPosition()), player.getDirection()) {
-            return false;
+                count = Character.getNumericValue(currentChar); 
+                i++;
+
+            }
+            else {
+                count = 1; 
+            }
+
+            while ( j < count) {
+                
+                if (userSolution.charAt(i) == 'R') {
+                    Direction newDirection = validatePlayer.getDirection().turnRight();    
+                    if(canMove(newDirection)) {
+                        validatePlayer.playerTurnRight(); 
+                    }
+                    else {
+                        return false; 
+                    }
+    
+                }
+                else if (userSolution.charAt(i) == 'L') {
+                    Direction newDirection = validatePlayer.getDirection().turnLeft();
+                    if (canMove(newDirection)) {
+                        validatePlayer.playerTurnLeft(); 
+                    }
+                    else {
+                        return false; 
+                    }
+                    
+                }
+                else if (userSolution.charAt(i) == 'F') {
+                    if(canMove(validatePlayer.getDirection())) {
+                        validatePlayer.playerMoveForward(); 
+                    }
+                    else {
+                        return false; 
+                    }
+                }
+                j++;
+            }
+            i++;
         }
-        else{
-            return true;
-        }
 
+        return validatePlayer.getPosition()[0] == maze.mazeExitPosition()[0] && 
+               validatePlayer.getPosition()[1] == maze.mazeExitPosition()[1];
     }
-
-     
-
-
 }

@@ -6,8 +6,8 @@ public class Tile {
 
     private boolean isWall; 
     private Maze maze; 
-    private row; 
-    private col; 
+    private int row; 
+    private int col; 
 
     public Tile(int[] currPos, Maze maze) {
         this.isWall = false; //because the very first tile will be the start Pos 
@@ -20,36 +20,29 @@ public class Tile {
     }
 
     public boolean isWall(int[] currPos, Direction currDir ) {
-        
-        switch(currDir){
+
+        int tempRow = currPos[0]; 
+        int tempCol = currPos[1];    
+
+        switch(currDir) {
             case North: 
-                if (this.getTile(currPos[0] - 1, currPos[1]) == false) {
-                    this.isWall = true; 
-                }
+                tempRow--; 
                 break; 
             case South: 
-                if (this.getTile(currPos[0] + 1, currPos[1]) == false) {
-                    this.isWall = true; 
-                }
+                tempRow++; 
                 break; 
             case East: 
-                if (this.getTile(currPos[0], currPos[1] + 1) == false) {
-                    this.isWall = true; 
-                }
+                tempCol++; 
                 break; 
             case West: 
-                if (this.getTile(currPos[0], currPos[1] - 1) == false) {
-                    this.isWall = true; 
-                }
-                break;
+                tempCol--; 
+                break; 
         }
 
-        
-        return this.isWall; 
-    }
-
-    public boolean getTile(int row, int col){
-        return this.maze.get(row).get(col); 
+        if (tempRow < 0 || tempRow >= maze.getRows() || tempCol < 0 || tempCol >= maze.getCols()) {
+            return true; 
+        }
+        return !this.maze.validMove(tempRow, tempCol); 
     }
 
 }

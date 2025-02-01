@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.assignment1; 
+package ca.mcmaster.se2aa4.mazerunner; 
 
 public class Player {
 
@@ -12,7 +12,7 @@ public class Player {
         this.col = startPos[1];  
     }
 
-    public void moveFoward(){
+    public void playerMoveForward(){
         switch(this.currDir) {
             
             case North: 
@@ -31,35 +31,47 @@ public class Player {
 
     }
 
-    public void turnRight() {
-        switch(this.currDir){ 
-            case North:
-                this.currDir = Directoin.East; 
-                break;
-            case South:
-                this.currDir = Direction.West;
-                break;
-            case East:
-                this.currDir = Direction.South;
-                break;
-            case West: 
-                this.currDir = Direction.North;
-                break; 
-            
-        }
-
+    public void playerTurnRight() {
+        this.currDir = this.currDir.turnRight(); 
     }
 
-    public void turnLeft(){
-
+    public void playerTurnLeft(){
+        this.currDir = this.currDir.turnLeft(); 
     }
 
     public int[] getPosition() {
         return new int[] {this.row, this.col}; 
     }   
 
-    //returns the direction the player is facing
+    public void setInitialDirection() {
+        
+        this.currDir = Direction.East; 
+
+    }
+
     public Direction getDirection() {
         return this.currDir; 
     }   
+
+
+    public int[] getNextPosition(Direction dir) {
+        int nextRow = this.row;
+        int nextCol = this.col;
+
+        switch(dir) {
+            case North: 
+                nextRow--; 
+                break; 
+            case South: 
+                nextRow++; 
+                break; 
+            case East: 
+                nextCol++; 
+                break; 
+            case West: 
+                nextCol--; 
+                break; 
+        }
+        return new int[] {nextRow, nextCol}; 
+    }
 }

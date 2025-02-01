@@ -34,11 +34,18 @@ public class Main {
             String mazefilepath = cmd.getOptionValue("i"); 
 
             Maze maze = new Maze(mazefilepath); //------<<<<<< >>>>>>>>>> used to creat the ADS 
-           
+
+
             if (cmd.getOptionValue("p")!= null){
 
-                PathFinder path = new PathFinder(maze); 
+                PathFinder path = new PathFinder(maze, true); 
                 String userSolution = cmd.getOptionValue("p"); 
+
+                /*
+                validate: 
+                1. expand user solution, which will be factorized form ( algorithm does not matter)
+                2. create a new player and then have it run through the path and check if the player ends at the end position 
+                */
                 Boolean validPath = path.validate(userSolution);
                 //user solution will be condensced ? 
 
@@ -53,10 +60,12 @@ public class Main {
             else {
                 // solve the maze ? 
                 logger.info("Finding valid solution for the maze path"); 
-                PathFinder path = new PathFinder(maze);
+                PathFinder path = new PathFinder(maze, false);
                   // pass in the maze object that can be used to find the path 
                 String solution = path.findSolution(); 
-                System.out.println("This is the solution to the maze: "); 
+                String factorizedPath = path.factorizedPath(solution);
+
+                System.out.println("This is the solution to the maze: " + factorizedPath); 
                 // will need to implement this solution 
                 
             }
@@ -64,7 +73,7 @@ public class Main {
         } catch(ParseException e) {
             logger.error("Failed to find file path"); 
         } catch(Exception e) {
-            logger.error("/!\\ An error has occured /!\\");
+            logger.error("/!\\ An error has occured /!\\", e);
         }
         logger.info("**** Computing path");
         logger.info("PATH NOT COMPUTED");

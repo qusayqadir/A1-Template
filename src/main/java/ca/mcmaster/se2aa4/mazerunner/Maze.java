@@ -22,33 +22,32 @@ public class Maze {
     private List<List<Boolean>> maze = new ArrayList<>(); 
 
     public Maze(String filepath) {
-  
-        try (BufferedReader reader = new BufferedReader(new FileReader (filepath))){ 
-            String line; 
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.replace("\t", " "); // Normalize tabs
 
-            while((line = reader.readLine()) != null ) {
-    
-                List<Boolean> newRow = new ArrayList<>(); 
-    
-                for (int idx = 0; idx < line.length(); idx++) {
-    
-                    if (line.charAt(idx) == '#') {
-    
-                        newRow.add(false); 
-    
-                    }else if (line.charAt(idx) == ' '){
-    
-                        newRow.add(true); 
-                    }
-                    else {
-                        newRow.add(false); 
-                    }
+                if (line.isEmpty()) continue; // Skip truly empty lines
+
+                // Ensure each row has the same number of columns
+                if (line.length() < getCols()) {
+                    line = String.format("%-" + getCols() + "s", line);
                 }
-    
-                maze.add(newRow); 
-            } 
-        } catch(IOException e) {
-            logger.error("Error reading file", e); 
+
+                List<Boolean> newRow = new ArrayList<>();
+                for (char c : line.toCharArray()) {
+                    newRow.add(c == ' ');
+                }
+
+                maze.add(newRow);
+            }
+
+            if (maze.isEmpty()) {
+                throw new IllegalStateException("Maze file is empty or improperly formatted.");
+            }
+        } catch (IOException e) {
+            logger.error("Error reading file", e);
+            throw new RuntimeException("Error loading maze file: " + filepath);
         }
 
     }
@@ -65,11 +64,13 @@ public class Maze {
     }
 
     public int[] mazeStartPosition() {
-        int[] startPosition = new int[2]; 
-        if (this.getRows() == 0 ) {
+         
+        if (maze.isEmpty() || maze.get(0).isEmpty()) {
             logger.error("Maze is empty"); 
         }
 
+        int[] startPosition = new int[2];
+        
         startPosition[1] = 0; 
 
         for ( int row = 0; row < this.getRows(); row++) {
@@ -78,14 +79,9 @@ public class Maze {
                 startPosition[0] = row; 
                 return startPosition; 
             }            
-            else{
-                continue; 
-            }
         }
 
-        logger.info("No entry point on the west side of the maze"); 
-        logger.info("Invalid Maze path"); 
-        return null; 
+        throw new IllegalStateException("No entry point on the west side of the maze.");
     }
 
     public int[] mazeExitPosition() {
@@ -99,19 +95,18 @@ public class Maze {
                 exitPosition[0] = row; 
                 return exitPosition; 
             }
-            else {
-                continue; 
-            }
         }
-        logger.info("No exit point on th east side of the maze "); 
-        logger.info("Invalid Maze path"); 
-        return null; 
+        throw new IllegalStateException("No entry point on the East side of the maze.");
     }
 
     public List<List<Boolean>> getMaze() {
 
         return this.maze; 
 
+    }
+
+    public boolean validMove(int row, int col) {
+        return this.maze.get(row).get(col); 
     }
   
 }

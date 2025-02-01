@@ -38,7 +38,7 @@ public class Main {
 
             if (cmd.getOptionValue("p")!= null){
 
-                PathFinder path = new PathFinder(maze, true); 
+                PathFinder path = new RightHandAlgo(maze, true); 
                 String userSolution = cmd.getOptionValue("p"); 
 
                 /*
@@ -60,7 +60,7 @@ public class Main {
             else {
                 // solve the maze ? 
                 logger.info("Finding valid solution for the maze path"); 
-                PathFinder path = new PathFinder(maze, false);
+                PathFinder path = new RightHandAlgo(maze, false);
                   // pass in the maze object that can be used to find the path 
                 String solution = path.findSolution(); 
                 String factorizedPath = path.factorizedPath(solution);

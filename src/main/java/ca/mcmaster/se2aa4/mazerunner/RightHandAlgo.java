@@ -17,16 +17,16 @@ public class RightHandAlgo extends PathFinder{
     public String findSolution() {
         logger.info("Finding solution using Right-Hand Rule");
 
-        // 🔹 Set initial direction to EAST (right)
+
         player.setInitialDirection();
 
-        int maxSteps = 1000; // Prevent infinite loops
+        int maxSteps = 1000; 
         int stepCount = 0;
 
         while (!hasReachedEnd() && stepCount < maxSteps) {
             stepCount++;
 
-            // 🔹 Right-Hand Rule: Try turning right first
+
             Direction rightDir = player.getDirection().turnRight();
             if (canMove(rightDir)) {
                 player.playerTurnRight();
@@ -34,19 +34,19 @@ public class RightHandAlgo extends PathFinder{
                 player.playerMoveForward();
                 solution.append("F");
             }
-            // 🔹 If right is blocked, move forward if possible
+          
             else if (canMove(player.getDirection())) {
                 player.playerMoveForward();
                 solution.append("F");
             }
-            // 🔹 If forward is blocked, try turning left
+            
             else if (canMove(player.getDirection().turnLeft())) {
                 player.playerTurnLeft();
                 solution.append("L");
                 player.playerMoveForward();
                 solution.append("F");
             }
-            // 🔹 If all directions are blocked, turn around (180 degrees)
+            
             else {
                 player.playerTurnRight();
                 solution.append("R");
@@ -56,7 +56,7 @@ public class RightHandAlgo extends PathFinder{
                 solution.append("F");
             }
 
-            // 🔥 Debugging Output
+
             logger.debug("Current Position:z`" + player.getPosition()[0] + "," + player.getPosition()[1] +
                          " | Direction: " + player.getDirection() + 
                          " | Path: " + solution.toString());

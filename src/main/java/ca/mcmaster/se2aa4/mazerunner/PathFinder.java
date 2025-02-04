@@ -54,36 +54,35 @@ public abstract class PathFinder {
     public String expandPath(String userSolution) {
         StringBuilder expandedPath = new StringBuilder();
 
-        // Remove all spaces from the input
+
         userSolution = userSolution.replace(" ", "");
 
-        // Check if the input is already in expanded form (no digits)
         if (!userSolution.matches(".*\\d.*")) {
-            // Input is already expanded, return as-is
+
             return userSolution;
         }
 
-        // Input is factorized, parse and expand it
+  
         int i = 0;
         while (i < userSolution.length()) {
-            // Extract the count (digits)
+
             int count = 0;
             while (i < userSolution.length() && Character.isDigit(userSolution.charAt(i))) {
                 count = count * 10 + Character.getNumericValue(userSolution.charAt(i));
                 i++;
             }
 
-            // Extract the direction (non-digit character)
+         
             if (i < userSolution.length()) {
                 char direction = userSolution.charAt(i);
                 i++;
 
-                // Append the direction 'count' times
+            
                 for (int j = 0; j < count; j++) {
                     expandedPath.append(direction);
                 }
             } else {
-                // Invalid input (no direction after count)
+               
                 throw new IllegalArgumentException("Invalid factorized path: " + userSolution);
             }
         }
@@ -92,9 +91,9 @@ public abstract class PathFinder {
     }
 
     public boolean validate(String userSolution) {
-        validatePlayer.setInitialDirection(); // Reset direction
+        validatePlayer.setInitialDirection(); 
 
-        // Expand the factorized path
+
         String expandedPath = expandPath(userSolution);
 
         int lengthSolution = expandedPath.length();
@@ -103,7 +102,7 @@ public abstract class PathFinder {
         while (i < lengthSolution) {
             char move = expandedPath.charAt(i);
 
-            // Process movement based on Right-Hand Rule logic
+
             if (move == 'R') {
                 validatePlayer.playerTurnRight();
             } 
@@ -111,20 +110,20 @@ public abstract class PathFinder {
                 validatePlayer.playerTurnLeft();
             } 
             else if (move == 'F') {
-                // Check if the player can move forward
+
                 if (canMove(validatePlayer.getDirection())) {
                     validatePlayer.playerMoveForward();
                 } else {
-                    return false; // Invalid move (hit a wall)
+                    return false; 
                 }
             } 
             else {
-                return false; // Invalid character in input
+                return false; 
             }
-            i++; // Move to the next character
+            i++; 
         }
 
-        // Final position should match the maze exit position
+    
         int[] finalPos = validatePlayer.getPosition();
         int[] exitPos = maze.mazeExitPosition();
 

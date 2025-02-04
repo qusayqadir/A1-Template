@@ -25,11 +25,10 @@ public class Maze {
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                line = line.replace("\t", " "); // Normalize tabs
+                line = line.replace("\t", " ");
 
-                if (line.isEmpty()) continue; // Skip truly empty lines
+                if (line.isEmpty()) continue; 
 
-                // Ensure each row has the same number of columns
                 if (line.length() < getCols()) {
                     line = String.format("%-" + getCols() + "s", line);
                 }

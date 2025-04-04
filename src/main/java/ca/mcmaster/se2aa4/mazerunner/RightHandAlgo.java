@@ -1,9 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner; 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import java.util.ArrayList; 
-import java.util.List;  
+import java.lang.reflect.Executable;
 
 
 
@@ -29,30 +26,41 @@ public class RightHandAlgo extends PathFinder{
 
             Direction rightDir = player.getDirection().turnRight();
             if (canMove(rightDir)) {
-                player.playerTurnRight();
+                Command turnRight = new PlayerTurnRight(player); 
+                turnRight.execute(); 
                 solution.append("R");
-                player.playerMoveForward();
+                
+                Command moveForward = new PlayerMoveForward(player); 
+                moveForward.execute(); 
                 solution.append("F");
             }
           
             else if (canMove(player.getDirection())) {
-                player.playerMoveForward();
+                Command moveForward = new PlayerMoveForward(player); 
+                moveForward.execute(); 
                 solution.append("F");
             }
             
             else if (canMove(player.getDirection().turnLeft())) {
-                player.playerTurnLeft();
+                Command turnLeft = new PlayerTurnLeft(player); 
+                turnLeft.execute(); 
                 solution.append("L");
-                player.playerMoveForward();
+
+                Command moveForward = new PlayerMoveForward(player); 
+                moveForward.execute(); 
                 solution.append("F");
             }
             
             else {
-                player.playerTurnRight();
+                Command turnRight = new PlayerTurnRight(player); 
+                turnRight.execute();
                 solution.append("R");
-                player.playerTurnRight();
+
+                turnRight.execute();
                 solution.append("R");
-                player.playerMoveForward();
+
+                Command moveForward  = new PlayerMoveForward(player); 
+                moveForward.execute(); 
                 solution.append("F");
             }
 

@@ -103,15 +103,18 @@ public abstract class PathFinder {
 
 
             if (move == 'R') {
-                validatePlayer.playerTurnRight();
+                Command turnRight = new PlayerTurnRight(validatePlayer); 
+                turnRight.execute(); 
             } 
             else if (move == 'L') {
-                validatePlayer.playerTurnLeft();
+                Command turnLeft = new PlayerTurnLeft(validatePlayer); 
+                turnLeft.execute(); 
             } 
             else if (move == 'F') {
 
                 if (canMove(validatePlayer.getDirection())) {
-                    validatePlayer.playerMoveForward();
+                    Command moveForward = new PlayerMoveForward(validatePlayer); 
+                    moveForward.execute(); 
                 } else {
                     return false; 
                 }

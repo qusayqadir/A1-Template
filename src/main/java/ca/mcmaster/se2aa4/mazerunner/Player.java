@@ -41,6 +41,11 @@ public class Player {
 
     }
 
+    public void setPosition(int row, int col) {
+        this.row = row;
+        this.col = col; 
+    }
+
     public Direction getDirection() {
         return this.currDir; 
     }   

@@ -3,7 +3,7 @@ package  ca.mcmaster.se2aa4.mazerunner;
 
 public class PlayerMoveForward implements Command {
 
-    private final Player player; 
+    private Player player; 
     private int oldRow, oldCol; 
 
     public PlayerMoveForward(Player player){

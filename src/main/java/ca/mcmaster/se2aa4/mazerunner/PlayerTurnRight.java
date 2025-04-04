@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 public class PlayerTurnRight implements Command{
 
-    private final Player player; 
+    private Player player; 
 
     public PlayerTurnRight(Player player) {
         this.player  = player; 

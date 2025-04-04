@@ -1,9 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner; 
 
-import java.lang.reflect.Executable;
-
-
-
 public class RightHandAlgo extends PathFinder{
 
     public RightHandAlgo(Maze maze, boolean userInput) {

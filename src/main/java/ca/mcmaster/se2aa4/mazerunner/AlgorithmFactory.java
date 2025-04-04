@@ -6,7 +6,7 @@ public class AlgorithmFactory{
     public PathFinder getAlgorithmMechanism(String algortihmMechanism, Maze maze, Boolean request){
         PathFinder path = null; 
 
-        if("RightHandAlgo".equals(algortihmMechanism)){
+        if("righthand".equals(algortihmMechanism)){
             path = new RightHandAlgo(maze, request); 
         }
         return path; 

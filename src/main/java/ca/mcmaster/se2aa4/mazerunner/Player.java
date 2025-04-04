@@ -15,18 +15,10 @@ public class Player {
     public void playerMoveForward(){
         switch(this.currDir) {
             
-            case North: 
-                this.row--; 
-                break; 
-            case South: 
-                this.row++; 
-                break; 
-            case East: 
-                this.col++; 
-                break; 
-            case West: 
-                this.col--; 
-                break; 
+            case North -> this.row--;
+            case South -> this.row++;
+            case East -> this.col++;
+            case West -> this.col--; 
         } 
 
     }
@@ -59,18 +51,10 @@ public class Player {
         int nextCol = this.col;
 
         switch(dir) {
-            case North: 
-                nextRow--; 
-                break; 
-            case South: 
-                nextRow++; 
-                break; 
-            case East: 
-                nextCol++; 
-                break; 
-            case West: 
-                nextCol--; 
-                break; 
+            case North -> nextRow--;
+            case South -> nextRow++;
+            case East -> nextCol++;
+            case West -> nextCol--; 
         }
         return new int[] {nextRow, nextCol}; 
     }

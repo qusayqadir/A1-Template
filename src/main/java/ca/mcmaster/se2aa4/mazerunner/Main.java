@@ -20,6 +20,7 @@ public class Main {
         Options options = new Options();
         options.addOption("i", "input",true, "Path to maze.txt file ");
         options.addOption("p", "input", true, "User potential solution for maze "); 
+        options.addOption("method","input", true, "User determines with Algorithm to use, i.e RightHandAlgo, BFS, DFS (only RightHandAlgo implemented)"); 
 
         CommandLineParser parser = new DefaultParser(); 
         CommandLine cmd;  
@@ -39,8 +40,12 @@ public class Main {
 
 
             if (cmd.getOptionValue("p")!= null){
+                
+                String algortihmMechanismRequest = cmd.getOptionValue("method"); 
+                AlgorithmFactory factory = new AlgorithmFactory(); 
+                PathFinder path = factory.getAlgorithmMechanism(algortihmMechanismRequest,  maze, true); 
 
-                PathFinder path = new RightHandAlgo(maze, true); 
+                // PathFinder path = new RightHandAlgo(maze, true); 
                 String userSolution = cmd.getOptionValue("p"); 
 
                 /*
@@ -62,7 +67,10 @@ public class Main {
             else {
                 // solve the maze ? 
                 logger.info("Finding valid solution for the maze path"); 
-                PathFinder path = new RightHandAlgo(maze, false);
+                String algortihmMechanismRequest = cmd.getOptionValue("m"); 
+                AlgorithmFactory factory = new AlgorithmFactory(); 
+                PathFinder path = factory.getAlgorithmMechanism(algortihmMechanismRequest,  maze, false); 
+   
                   // pass in the maze object that can be used to find the path 
                 String solution = path.findSolution(); 
                 String factorizedPath = path.factorizedPath(solution);
